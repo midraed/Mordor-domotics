@@ -10,12 +10,15 @@
 
 // PIR sensor inside
 
+int Switch_PIR = 13;
+
 int Switch_Comedor = 11;   // override swith for R_Comedor
 
 int R_comedor = 6;
 int PIRins = 4;
 int motion1Detect= 0;
 int manual1Switch = 0;
+int motionSwitch = 0;
 
 // PIR sensor outside
 
@@ -42,6 +45,8 @@ void setup() {
 
 
 // PIR sensor inside
+pinMode(Switch_PIR, INPUT);
+
 pinMode(R_comedor, OUTPUT);
 pinMode(PIRins, INPUT);
 pinMode(Switch_Comedor, INPUT);
@@ -88,16 +93,19 @@ void loop() {
 
 // PIR Sensor inside
 
-manual1Switch = digitalRead (Switch_Comedor);
+  manual1Switch = digitalRead (Switch_Comedor);
+  motionSwitch = digitalRead (Switch_PIR);
 
-motion1Detect = digitalRead(PIRins);
-if (motion1Detect == HIGH)
+if (motionSwitch == HIGH) // Motion Mode
+{
+  motion1Detect = digitalRead(PIRins);
+  if (motion1Detect == HIGH)
      {
      digitalWrite(R_comedor, HIGH);
      // delay (180000); //Optional 3 minute delayed off
      // digitalWrite(R_comedor, LOW);
      } 
-
+}
 else if (manual1Switch == HIGH) // Manual On
 {
   digitalWrite(R_comedor, HIGH);
@@ -112,14 +120,16 @@ else // Manual Off
 
 manual2Switch = digitalRead (Switch_Galeria);
 
-motion2Detect = digitalRead(PIRout);
-if (motion2Detect == HIGH)
+if (motionSwitch == HIGH) // Motion Mode
+{
+   motion2Detect = digitalRead(PIRout);
+   if (motion2Detect == HIGH)
      {
      digitalWrite(R_Galeria, HIGH);
      // delay (180000); //Optional 3 minute delayed off
      // digitalWrite(R_comedor, LOW);
      } 
-
+}
 else if (manual2Switch == HIGH) // Manual On
 {
   digitalWrite(R_Galeria, HIGH);
